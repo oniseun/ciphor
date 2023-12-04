@@ -125,7 +125,7 @@ describe('CiphorService', () => {
       });
     });
 
-    it('should log a message when decryption fails', async () => {
+    it('should log a message when decryption fails but return empty array', async () => {
       const loggerSpy = jest.spyOn(ciphorService['logger'], 'error');
       const id = '1';
       const decryptionKey = 'someDecryptionKey';
@@ -140,8 +140,7 @@ describe('CiphorService', () => {
           dateUpdated: new Date(),
         },
       ];
-      ciphorRepository.save(records);
-
+      jest.spyOn(ciphorRepository, 'find').mockResolvedValue(records);
       // Spy on the CiphorUtil.decrypt method to simulate a decryption failure
       jest.spyOn(ciphorUtil, 'decrypt').mockImplementation(() => {
         throw new Error('Decryption failed');

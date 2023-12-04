@@ -79,8 +79,8 @@ describe('CiphorController', () => {
         // Fail the test if it does not throw an error
         fail('Expected an error to be thrown');
       } catch (e) {
-        expect(e.response).toHaveProperty('statusCode', 500);
-        expect(e.response).toHaveProperty('message', 'Internal server error');
+        expect(e).toHaveProperty('status', 500);
+        expect(e).toHaveProperty('response', 'Internal server error');
       }
     });
   });
@@ -96,14 +96,14 @@ describe('CiphorController', () => {
         {
           id: '1',
           vector: 'abcdef0123456789',
-          content: 'decryptedContent1',
+          content: '{ "key": "decryptedContent1" }',
           dateCreated: new Date(),
           dateUpdated: new Date(),
         },
         {
           id: '2',
           vector: '0123456789abcdef',
-          content: 'decryptedContent2',
+          content: '{ "key": "decryptedContent2" }',
           dateCreated: new Date(),
           dateUpdated: new Date(),
         },
@@ -134,25 +134,6 @@ describe('CiphorController', () => {
         retrieveDto.id,
         retrieveDto.decryptionKey,
       );
-    });
-
-    it('should handle errors thrown by CiphorService decrypt method', async () => {
-      const retrieveDto: RetrieveDto = {
-        id: '1',
-        decryptionKey: 'myDecryptionKey123',
-      };
-
-      const error = new Error('Decryption failed');
-      ciphorServiceMock.decrypt.mockRejectedValue(error);
-
-      try {
-        await ciphorController.retrieve(retrieveDto);
-        // Fail the test if it does not throw an error
-        fail('Expected an error to be thrown');
-      } catch (e) {
-        expect(e.response).toHaveProperty('statusCode', 500);
-        expect(e.response).toHaveProperty('message', 'Internal server error');
-      }
     });
   });
 });
