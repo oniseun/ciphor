@@ -30,7 +30,7 @@ Database server
   - POSTGRES_HOST=172.26.0.20
   - POSTGRES_USER=postgres
   - POSTGRES_PASSWORD=password
-  - POSTGRES_DB=account
+  - POSTGRES_DB=ciphor
 ```
 
 ## Installation (without docker)
