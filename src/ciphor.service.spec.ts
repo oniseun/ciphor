@@ -126,7 +126,7 @@ describe('CiphorService', () => {
     });
 
     it('should log a message when decryption fails', async () => {
-      const loggerSpy = jest.spyOn(ciphorService['logger'], 'log');
+      const loggerSpy = jest.spyOn(ciphorService['logger'], 'error');
       const id = '1';
       const decryptionKey = 'someDecryptionKey';
 

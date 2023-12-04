@@ -17,37 +17,44 @@ export class CiphorService {
     encryptionKey: string,
     value: any,
   ): Promise<Ciphor> {
-    const vector = this.ciphorUtil.getInitialVector();
+    try {
+      const vector = this.ciphorUtil.getInitialVector();
+      const stringValue = JSON.stringify(value);
 
-    const stringValue = JSON.stringify(value);
+      const content = this.ciphorUtil.encrypt(
+        encryptionKey,
+        stringValue,
+        vector,
+      );
 
-    const content = this.ciphorUtil.encrypt(encryptionKey, stringValue, vector);
+      const ciphor = {
+        id,
+        vector,
+        content,
+      };
 
-    const ciphor = {
-      id,
-      vector,
-      content,
-    };
-
-    return await this.ciphorRepository.save(ciphor);
+      return await this.ciphorRepository.save(ciphor);
+    } catch (e) {
+      this.logger.error(`encrypt ${e}`);
+      throw e;
+    }
   }
 
   async decrypt(id: string, decryptionKey: string): Promise<Ciphor[]> {
     const records = await this.ciphorRepository.find({
-      where: { id: Like(`%${id}`) },
+      where: { id: Like(`${id}%`) },
     });
 
     if (records.length > 0) {
       const decryptedRecords = records.reduce((decrypted, record) => {
         const { id, content, vector, dateCreated, dateUpdated } = record;
 
-        const decryptContent = this.ciphorUtil.decrypt(
-          decryptionKey,
-          content,
-          vector,
-        );
-
-        if (content) {
+        try {
+          const decryptContent = this.ciphorUtil.decrypt(
+            decryptionKey,
+            content,
+            vector,
+          );
           decrypted.push({
             id,
             content: decryptContent,
@@ -55,8 +62,8 @@ export class CiphorService {
             dateCreated,
             dateUpdated,
           });
-        } else {
-          this.logger.log(`FAILED Decryption: content ID: ${id}`);
+        } catch (e) {
+          this.logger.error(`FAILED Decryption: content ID: ${id}`);
         }
 
         return decrypted;
