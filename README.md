@@ -36,6 +36,10 @@ Database server
 ## Installation (without docker)
 
 ```bash
+# use the correct node version 
+$ nvm use
+
+# install
 $ npm install
 ```
 ## Running the app locally (without docker)
@@ -62,9 +66,6 @@ $ localhost:3000/cyphor
 ```bash
 # unit tests
 $ npm run test
-
-# e2e tests
-$ npm run test:e2e
 
 # test coverage
 $ npm run test:cov
