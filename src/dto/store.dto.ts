@@ -1,6 +1,5 @@
-// src/ciphor/dto/store.dto.ts
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, Length, IsJSON, IsNotEmpty } from 'class-validator';
+import { IsString, Length, IsNotEmpty, IsObject } from 'class-validator';
 
 export class StoreDto {
   @ApiProperty({
@@ -29,7 +28,7 @@ export class StoreDto {
     description: 'Value to be encrypted (JSON format)',
     required: true,
   })
-  @IsJSON()
+  @IsObject()
   @IsNotEmpty()
   value: Record<string, any>;
 }
