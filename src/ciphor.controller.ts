@@ -4,6 +4,7 @@ import {
   Body,
   HttpException,
   HttpStatus,
+  Logger,
 } from '@nestjs/common';
 import { CiphorService } from './ciphor.service';
 import { StoreDto } from './dto/store.dto';
@@ -15,6 +16,8 @@ import { StoreResponseDto } from './dto/store-response.dto';
 @ApiTags('Ciphor')
 @Controller('ciphor')
 export class CiphorController {
+  private readonly logger = new Logger(CiphorService.name);
+
   constructor(private readonly ciphorService: CiphorService) {}
 
   @Post('store')
@@ -31,8 +34,9 @@ export class CiphorController {
       const result = await this.ciphorService.encrypt(id, encryptionKey, value);
       return new StoreResponseDto(result, value);
     } catch (error) {
+      this.logger.error(`encrypt error: ${error.message}`);
       throw new HttpException(
-        error.message || 'Internal server error',
+        'Internal server error',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
@@ -49,15 +53,8 @@ export class CiphorController {
   async retrieve(
     @Body() retrieveDto: RetrieveDto,
   ): Promise<RetrieveResponseDto[]> {
-    try {
-      const { id, decryptionKey } = retrieveDto;
-      const results = await this.ciphorService.decrypt(id, decryptionKey);
-      return results.map((result) => new RetrieveResponseDto(result));
-    } catch (error) {
-      throw new HttpException(
-        error.message || 'Internal server error',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
+    const { id, decryptionKey } = retrieveDto;
+    const results = await this.ciphorService.decrypt(id, decryptionKey);
+    return results.map((result) => new RetrieveResponseDto(result));
   }
 }
