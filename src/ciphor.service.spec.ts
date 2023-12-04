@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { CiphorService } from './ciphor.service';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Ciphor } from './ciphor.entity';
 import { CiphorUtil } from './ciphor.util';
@@ -97,7 +97,7 @@ describe('CiphorService', () => {
 
       expect(result).toEqual(expectedResult);
       expect(ciphorRepository.find).toHaveBeenCalledWith({
-        where: { id: '1' },
+        where: { id: Like(`${id}%`) },
       });
       expect(ciphorUtil.decrypt).toHaveBeenCalledWith(
         decryptionKey,
@@ -121,7 +121,7 @@ describe('CiphorService', () => {
 
       expect(result).toEqual([]);
       expect(ciphorRepository.find).toHaveBeenCalledWith({
-        where: { id: 'nonexistentID' },
+        where: { id: Like(`${id}%`) },
       });
     });
 
