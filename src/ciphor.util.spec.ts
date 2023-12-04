@@ -1,6 +1,4 @@
 import { CiphorUtil } from './ciphor.util';
-import * as crypto from 'crypto';
-
 describe('CiphorUtil', () => {
   let ciphorUtil: CiphorUtil;
 

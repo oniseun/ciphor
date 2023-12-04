@@ -1,10 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import crypto from 'crypto';
+import * as crypto from 'crypto';
 
 @Injectable()
 export class CiphorUtil {
-  algorithm = 'aes-256-gcm';
-  charEncoding = 'utf-8';
+  algorithm = 'aes-128-cbc';
   byteLength = 16;
 
   getInitialVector(): string {
@@ -12,20 +11,20 @@ export class CiphorUtil {
   }
 
   encrypt(encryptionKey: string, value: string, iv: string): string {
-    const keyBuffer = Buffer.from(encryptionKey, this.charEncoding).slice(
+    const keyBuffer = Buffer.from(encryptionKey, 'utf-8').slice(
       0,
       this.byteLength,
     );
     const ivBuffer = Buffer.from(iv, 'hex');
     const cipher = crypto.createCipheriv(this.algorithm, keyBuffer, ivBuffer);
-    let encryptedValue = cipher.update(value, this.charEncoding, 'hex');
+    let encryptedValue = cipher.update(value, 'utf-8', 'hex');
     encryptedValue += cipher.final('hex');
 
     return encryptedValue;
   }
 
   decrypt(decryptionKey: string, value: string, iv: string): string {
-    const keyBuffer = Buffer.from(decryptionKey, this.charEncoding).slice(
+    const keyBuffer = Buffer.from(decryptionKey, 'utf-8').slice(
       0,
       this.byteLength,
     );
@@ -35,9 +34,9 @@ export class CiphorUtil {
       keyBuffer,
       ivBuffer,
     );
-    let decryptedValue = decipher.update(value, 'hex', this.charEncoding);
-    decryptedValue += decipher.final(this.charEncoding);
+    let decryptedValue = decipher.update(value, 'hex', 'utf-8');
+    decryptedValue += decipher.final('utf-8');
 
-    return decryptedValue;
+    return decryptedValue.toString();
   }
 }
