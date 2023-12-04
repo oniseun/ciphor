@@ -3,10 +3,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Ciphor } from './ciphor.entity';
 import { CiphorController } from './ciphor.controller';
 import { CiphorService } from './ciphor.service';
+import { CiphorUtil } from './ciphor.util';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Ciphor]),
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.POSTGRES_HOST || 'localhost',
@@ -19,8 +19,9 @@ import { CiphorService } from './ciphor.service';
       autoLoadEntities: true,
       logging: true,
     }),
+    TypeOrmModule.forFeature([Ciphor]),
   ],
   controllers: [CiphorController],
-  providers: [CiphorService],
+  providers: [CiphorService, CiphorUtil],
 })
 export class CiphorModule {}

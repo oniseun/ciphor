@@ -1,14 +1,20 @@
-import { Entity, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  PrimaryColumn,
+} from 'typeorm';
 
 @Entity()
 export class Ciphor {
-  @Column({ type: 'text', nullable: false, unique: true })
+  @PrimaryColumn({ length: 20, nullable: false, unique: true })
   id: string;
 
   @Column({ type: 'text', nullable: false })
   content: string;
 
-  @Column({ length: 'text', name: 'initial_vector', nullable: false })
+  @Column({ type: 'text', name: 'initial_vector', nullable: false })
   vector: string;
 
   @CreateDateColumn({
