@@ -16,10 +16,11 @@ export class RetrieveDto {
   @ApiProperty({
     example: 'myDecryptionKey123',
     description: 'Decryption key',
+    minLength: 16,
     maxLength: 16,
   })
   @IsString()
-  @Length(16, 16)
+  @Length(16)
   @IsNotEmpty()
   decryptionKey: string;
 }
