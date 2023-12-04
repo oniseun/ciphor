@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   postgres-db:
-    container_name: accounts-db
+    container_name: ciphor-db
     ports:
       - '${DATABASE_PORT:-5432}:5432'
     expose:
@@ -10,10 +10,10 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=account
+      - POSTGRES_DB=ciphor
 
     networks:
-      accounts-network:
+      ciphor-network:
         ipv4_address: 172.26.0.20
         aliases:
           - posgres.db.local
@@ -29,12 +29,12 @@ services:
     links:
       - postgres-db
     networks:
-      accounts-network:
+      ciphor-network:
         ipv4_address: 172.26.0.21
         aliases:
           - posgres.admin.local
   backend:
-    container_name: accounts-backend
+    container_name: ciphor-backend
     build:
       context: ./
       dockerfile: Dockerfile
@@ -46,15 +46,15 @@ services:
       - POSTGRES_HOST=postgres-db
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=account
+      - POSTGRES_DB=ciphor
     networks:
-      accounts-network:
+      ciphor-network:
         ipv4_address: 172.26.0.22
         aliases:
-          - accounts-backend.local
+          - ciphor-backend.local
 
 networks:
-    accounts-network:
+    ciphor-network:
         ipam:
             driver: default
             config:
