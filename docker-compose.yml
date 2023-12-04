@@ -1,0 +1,61 @@
+version: '3.8'
+services:
+  postgres-db:
+    container_name: accounts-db
+    ports:
+      - '${DATABASE_PORT:-5432}:5432'
+    expose:
+      - '${DATABASE_PORT:-5432}'
+    image: postgres:12-alpine
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=account
+
+    networks:
+      accounts-network:
+        ipv4_address: 172.26.0.20
+        aliases:
+          - posgres.db.local
+  pgadmin:
+    container_name: pgadmin4_container
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: password
+    ports:
+      - "5050:80"
+    links:
+      - postgres-db
+    networks:
+      accounts-network:
+        ipv4_address: 172.26.0.21
+        aliases:
+          - posgres.admin.local
+  backend:
+    container_name: accounts-backend
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - "4000:3000"
+    links:
+      - postgres-db
+    environment:
+      - POSTGRES_HOST=postgres-db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=account
+    networks:
+      accounts-network:
+        ipv4_address: 172.26.0.22
+        aliases:
+          - accounts-backend.local
+
+networks:
+    accounts-network:
+        ipam:
+            driver: default
+            config:
+                - subnet: 172.26.0.0/16
