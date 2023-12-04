@@ -3,8 +3,9 @@ import { CiphorController } from './ciphor.controller';
 import { CiphorService } from './ciphor.service';
 import { StoreDto } from './dto/store.dto';
 import { RetrieveDto } from './dto/retrieve.dto';
-import { CiphorDto } from './dto/ciphor.dto';
 import { Ciphor } from './ciphor.entity';
+import { StoreResponseDto } from './dto/store-response.dto';
+import { RetrieveResponseDto } from './dto/retrieve-response.dto';
 
 describe('CiphorController', () => {
   let ciphorController: CiphorController;
@@ -31,7 +32,7 @@ describe('CiphorController', () => {
   });
 
   describe('store', () => {
-    it('should call CiphorService encrypt method and return the result as CiphorDto', async () => {
+    it('should call CiphorService encrypt method and return the result as StoreResponseDto', async () => {
       const storeDto: StoreDto = {
         id: '1',
         encryptionKey: 'mySecretKey1234567',
@@ -50,9 +51,9 @@ describe('CiphorController', () => {
 
       const result = await ciphorController.store(storeDto);
 
-      expect(result).toBeInstanceOf(CiphorDto);
+      expect(result).toBeInstanceOf(StoreResponseDto);
       expect(result.id).toEqual(expectedResult.id);
-      expect(result.content).toEqual(JSON.parse(expectedResult.content));
+      expect(result.content).toEqual(storeDto.value);
       expect(result.dateCreated).toEqual(expectedResult.dateCreated);
       expect(result.dateUpdated).toEqual(expectedResult.dateUpdated);
 
@@ -85,7 +86,7 @@ describe('CiphorController', () => {
   });
 
   describe('retrieve', () => {
-    it('should call CiphorService decrypt method and return the result as an array of CiphorDto', async () => {
+    it('should call CiphorService decrypt method and return the result as an array of RetrieveResponseDto', async () => {
       const retrieveDto: RetrieveDto = {
         id: '1',
         decryptionKey: 'myDecryptionKey123',
@@ -114,7 +115,7 @@ describe('CiphorController', () => {
 
       expect(results).toBeInstanceOf(Array);
       results.forEach((result) => {
-        expect(result).toBeInstanceOf(CiphorDto);
+        expect(result).toBeInstanceOf(RetrieveResponseDto);
         expect(result.id).toEqual(
           expectedResult.find((r) => r.id === result.id).id,
         );

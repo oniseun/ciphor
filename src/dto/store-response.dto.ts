@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsNotEmpty, IsDateString, IsJSON } from 'class-validator';
 import { Ciphor } from '../ciphor.entity';
 
-export class CiphorDto {
+export class StoreResponseDto {
   @ApiProperty({
     example: 'abc123',
     description: 'ID of the ciphor record',
@@ -36,9 +36,9 @@ export class CiphorDto {
   @IsDateString()
   dateUpdated: Date;
 
-  constructor(ciphor: Ciphor) {
+  constructor(ciphor: Ciphor, content?: Record<string, any>) {
     this.id = ciphor.id;
-    this.content = JSON.parse(ciphor.content);
+    this.content = content ? content : JSON.parse(ciphor.content);
     this.dateCreated = ciphor.dateCreated;
     this.dateUpdated = ciphor.dateUpdated;
   }
