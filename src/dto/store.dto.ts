@@ -3,18 +3,18 @@ import { IsString, Length, IsNotEmpty, IsObject } from 'class-validator';
 
 export class StoreDto {
   @ApiProperty({
-    example: 'abc123',
+    example: 'prefix1-first',
     description: 'ID of the ciphor record',
     minLength: 3,
-    maxLength: 16,
+    maxLength: 20,
   })
   @IsString()
-  @Length(3, 16)
+  @Length(3, 20)
   @IsNotEmpty()
   id: string;
 
   @ApiProperty({
-    example: 'mySecretKey1234567',
+    example: 'mySecretKey12345',
     description: 'Encryption key',
     maxLength: 16,
   })

@@ -3,18 +3,18 @@ import { IsString, Length, IsNotEmpty } from 'class-validator';
 
 export class RetrieveDto {
   @ApiProperty({
-    example: 'abc123',
-    description: 'ID of the record',
+    example: 'prefix1-',
+    description: 'ID of the record or prefix of the id',
     minLength: 3,
-    maxLength: 16,
+    maxLength: 20,
   })
   @IsString()
-  @Length(3, 16)
+  @Length(3, 20)
   @IsNotEmpty()
   id: string;
 
   @ApiProperty({
-    example: 'myDecryptionKey123',
+    example: 'mySecretKey12345',
     description: 'Decryption key',
     minLength: 16,
     maxLength: 16,
